@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed22d2ab41f73a04cac8e519c44aaae3, type: 3}
+  m_Name: Tire
+  m_EditorClassIdentifier: 
+  nameObject: Tire
+  localRotationEuler: {x: -30, y: 0, z: 90}
+  localScale: {x: 2, y: 2, z: 2}
+  localPosition: {x: -0.156, y: -0.571, z: -0.399}
+  worldRotationEuler: {x: 0, y: 0, z: 0}
+  audioClips:
+  - {fileID: 8300000, guid: ffb47c137385f0d478cdde65ee7e0209, type: 3}
