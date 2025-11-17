@@ -27,6 +27,7 @@ public class SetMinuteHand : MonoBehaviour
         }
 
         Transform heldObject = holdContainer.GetChild(0);
+        isSetting = true; // ✅ Đánh dấu đã chạy
         heldObject.SetParent(rootNote);
         AudioManager.instance.PlaySFXAtPosition(AudioManager.instance.setUpMotor, transform.position);
         heldObject.localPosition = new Vector3(-0.01141216f, 152.2344f, 7.58461f);
@@ -49,7 +50,7 @@ public class SetMinuteHand : MonoBehaviour
             if (meshCol != null) meshCol.isTrigger = false;
         }
 
-        isSetting = true; // ✅ Đánh dấu đã chạy
+       
     }
     void SetLayerRecursively(Transform target, string newLayer)
     {

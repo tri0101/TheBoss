@@ -37,7 +37,9 @@ public class SetStatus : MonoBehaviour
             Debug.Log("Không tìm thấy Buffalo, Dog, Lion hoặc Rihno trong holdContainer.");
             return;
         }
-
+        isSetted = true;
+        selectedAnimal.gameObject.layer = LayerMask.NameToLayer("Default");
+        SetLayerRecursively(selectedAnimal, "Default");
         // Gỡ khỏi container
         selectedAnimal.SetParent(null);
         Rigidbody rb = selectedAnimal.GetComponent<Rigidbody>();
@@ -76,10 +78,9 @@ public class SetStatus : MonoBehaviour
         {
             Debug.LogWarning("Không tìm thấy PickUpSystem trên player.");
         }
-        selectedAnimal.gameObject.layer = LayerMask.NameToLayer("Default");
-        SetLayerRecursively(selectedAnimal, "Default");
+      
         PlayerObjectNameDisplay pond = player.GetComponent<PlayerObjectNameDisplay>();
-        isSetted = true;
+       
         pond.setFalseLMB();
     }
     void SetLayerRecursively(Transform target, string newLayer)

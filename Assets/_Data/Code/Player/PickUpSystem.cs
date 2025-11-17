@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections;
+using NUnit.Framework.Interfaces;
 public class PickUpSystem : MonoBehaviour
 {
     [Header("References")]
@@ -13,6 +14,7 @@ public class PickUpSystem : MonoBehaviour
     public float pickUpRange = 3f;
     public float dropForwardForce = 2f;
     public float dropUpwardForce = 1f;
+    [SerializeField] private int countGun = 0;
     public Vector3 heldTargetLocalOffset = new Vector3(0.4f, -0.3f, 0.8f);
 
     [SerializeField] private GameObject _heldObject;
@@ -25,7 +27,10 @@ public class PickUpSystem : MonoBehaviour
     public PickUpConfig CachedConfig => _cachedConfig;
 
     private Quaternion heldInitialRotation;
-
+    public void MinusCountGun()
+    {
+        countGun--;
+    }
     void Update()
     {
         Debug.DrawRay(fpsCam.position, fpsCam.forward * pickUpRange, Color.red);
@@ -66,7 +71,9 @@ public class PickUpSystem : MonoBehaviour
             if ((PickUpItem.name == "Tranquilizer dart" || PickUpItem.name == "Used tranquilizer dart") &&
                 _heldObject != null && _heldObject.name == "tranquilizer_gun")
             {
+                if (countGun == 1) return;
                 AudioManager.instance.PlaySFXAtPosition(AudioManager.instance.setUpMotor, transform.position);
+                countGun++;
                 Debug.Log("Đã gắn Dart vào tranquilizer_gun khi đang cầm súng.");
                 PickUpItem.SetParent(_heldObject.transform, false);
                 PickUpItem.localRotation = Quaternion.Euler(90, 0, 0);

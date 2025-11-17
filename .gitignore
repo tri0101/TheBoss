@@ -13,6 +13,8 @@
 !/[Aa]ssets/Scenes/**
 !/[Aa]ssets/Editor/
 !/[Aa]ssets/Editor/**
+!/[Aa]ssets/AddressableAssetsData/
+!/[Aa]ssets/AddressableAssetsData/**
 
 # ================================================
 # 3️⃣ GIỮ FILE META (rất quan trọng cho Unity)

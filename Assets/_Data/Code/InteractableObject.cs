@@ -132,6 +132,29 @@ public class InteractableObject : MonoBehaviour
                             Debug.Log("Đang gọi");
 
                             method.Invoke(scriptHolder, null);
+                            if(transform.name == "FuelForm")
+                            {
+                                FuelManager fuel = transform.GetComponent<FuelManager>();
+                                if (fuel.isFuel)
+                                {
+                                    this.enabled = false;
+                                }
+                                return;
+                            }
+                            if(transform.name == "KeypadVisuals")
+                            {
+                                return;
+                            }
+                            if(transform.name == "Object_314")
+                            {
+                                OpenDoorCar openDoor = transform.GetComponent<OpenDoorCar>();
+                                if (openDoor.isOpen)
+                                {
+                                    this.enabled = false;
+                                }
+                                return;
+                            }
+                            this.enabled = false;
                         }
                         else
                         {
@@ -296,7 +319,7 @@ public class InteractableObject : MonoBehaviour
             //keyObject.SetParent(null);
             OpenDoor();
 
-            
+            this.enabled = false;
         }
         
     }

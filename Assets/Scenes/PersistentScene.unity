@@ -285,7 +285,7 @@ Transform:
   m_GameObject: {fileID: 514973906}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 0, y: 1, z: 400}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2300,7 +2300,7 @@ MonoBehaviour:
   loadingScreen: {fileID: 994178397571642235}
   bar: {fileID: 994178397571642234}
   environment:
-    m_AssetGUID: 50fe301d0409e6148bd66ff4248ccda4
+    m_AssetGUID: 9aaa23cf45e5fb74aa96c597faa49ce1
     m_SubObjectName: 
     m_SubObjectType: 
     m_SubObjectGUID: 

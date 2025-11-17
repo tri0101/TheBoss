@@ -44,20 +44,30 @@ public class PlayButton : MonoBehaviour
     {
         AudioManager.instance.PlaySFX2D(AudioManager.instance.buttonClick, 1f);
         // Nếu đang mở thì tắt
-        if (settingCanvasOpen)
-        {
-            canvasSetting.gameObject.SetActive(false);
-            settingCanvasOpen = false;
-        }
-        else // Nếu đang tắt thì bật
-        {
-            canvasSetting.gameObject.SetActive(true);
-            canvasCredit.gameObject.SetActive(false);
-            settingCanvasOpen = true;
-            creditCanvasOpen = false;
-        }
+        //if (settingCanvasOpen)
+        //{
+        //    canvasSetting.gameObject.SetActive(false);
+        //    settingCanvasOpen = false;
+        //}
+        //else // Nếu đang tắt thì bật
+        //{
+        //    canvasSetting.gameObject.SetActive(true);
+        //    canvasCredit.gameObject.SetActive(false);
+        //    settingCanvasOpen = true;
+        //    creditCanvasOpen = false;
+        //}
+       
+        canvasSetting.gameObject.SetActive(true);
+        canvasCredit.gameObject.SetActive(false);
+        settingCanvasOpen = true;
+        creditCanvasOpen = false;
     }
-
+    public void BackButton()
+    {
+        AudioManager.instance.PlaySFX2D(AudioManager.instance.buttonClick, 1f);
+        canvasSetting.gameObject.SetActive(false);
+        settingCanvasOpen = false;
+    }
     public void CreditCanvas()
     {
         // Nếu đang mở thì tắt

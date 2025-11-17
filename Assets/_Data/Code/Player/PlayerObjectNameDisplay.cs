@@ -3,6 +3,7 @@ using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerObjectNameDisplay : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class PlayerObjectNameDisplay : MonoBehaviour
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private Transform canvasButtonE;
     [SerializeField] private Transform canvasButtonLMB;
+    [SerializeField] private Transform canvasButtonLMBRed;
     [SerializeField] private Transform canvasButtonQ;
     [SerializeField] private Transform canvasButtonShoot;
     [SerializeField] private Transform canvasButtonSpray;
@@ -223,7 +225,7 @@ public class PlayerObjectNameDisplay : MonoBehaviour
         Ray ray = new Ray(fpsCam.transform.position, fpsCam.transform.forward);
         if (Physics.Raycast(ray, out RaycastHit hit, checkRange))
         {
-            if (hit.collider.CompareTag("InteractableObject") ||  hit.collider.transform.name.Contains("Meat") )
+            if (hit.collider.CompareTag("InteractableObject") ||  hit.collider.transform.name.Contains("Meat")  )
             {
                 // Lấy tất cả script InteractableObject trên object đó
                 InteractableObject[] interactables = hit.collider.GetComponents<InteractableObject>();
@@ -243,9 +245,20 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                             return;
                         }
                         // Duyệt qua các con trong holdContainer
-                        if (holdContainer.childCount == 0) return;
+                        if (holdContainer.childCount == 0)
+                        {
+                            if (hit.collider.transform.name.Contains("Meat")) return;
+                            if (hit.collider.transform.name.Contains("Tuong"))
+                            {
+                                SetStatus setStatus = hit.transform.GetComponent<SetStatus>();
+                                if (setStatus.IsSetted()) return;
+                            }
+                            pc.isNotCorrect = true;
+                            canvasButtonLMBRed.gameObject.SetActive(true);
+                            return;
+                        }
 
-                        foreach (Transform child in holdContainer)
+                            foreach (Transform child in holdContainer)
 
                         {
                             if(hit.transform.name == "FuelForm")
@@ -282,6 +295,37 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                                 pc.isOnObject = true;
                                 
                                    
+                                return;
+                            }
+                            else if (hit.collider.transform.name == "CLock_ClockDark_0")
+                            {
+                                if (holdContainer.GetChild(0).name != "ClockHandOne" && holdContainer.GetChild(0).name != "ClockHandtwo")
+                                {
+                                    pc.isNotCorrect = true;
+                                    canvasButtonLMBRed.gameObject.SetActive(true);
+                                    return;
+                                }
+                            }
+                            else if (hit.collider.transform.name == "MotorBlockForm")
+                            {
+                                if (holdContainer.GetChild(0).name != "MotorBattery" && holdContainer.GetChild(0).name != "MotorBlock")
+                                {
+                                    pc.isNotCorrect = true;
+                                    canvasButtonLMBRed.gameObject.SetActive(true);
+                                    return;
+                                }
+                            }
+                            else
+                            {
+                                if (hit.collider.transform.name.Contains("Meat")) return;
+                                if (hit.collider.transform.name.Contains("Tuong"))
+                                {
+                                    SetStatus setStatus = hit.transform.GetComponent<SetStatus>();
+                                    if (setStatus.IsSetted()) return;
+                                }
+                                
+                                pc.isNotCorrect = true;
+                                canvasButtonLMBRed.gameObject.SetActive(true);
                                 return;
                             }
 
@@ -348,6 +392,8 @@ public class PlayerObjectNameDisplay : MonoBehaviour
 
                     if (transform.position.x > hit.transform.position.x)
                     {
+                        pc.isNotCorrect = true;
+                        canvasButtonLMBRed.gameObject.SetActive(true);
                         if (Input.GetMouseButtonDown(0))
                         {
                             ShowMessage(3f, "It’s locked from the other side");
@@ -451,7 +497,99 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                 return;
                 
             }
-            if(hitTransform.name == "ButtonGarage")
+            if(hitTransform.name.StartsWith("Nail"))
+            {
+                
+                    
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        if(holdContainer.childCount == 0 || holdContainer.GetChild(0).name != "Screwdriver")
+                        ShowMessage(3f, "You need something to remove this nail");
+                        else ShowMessage(1f, "");
+                    }
+                return;
+                
+            }
+            if (hitTransform.name.StartsWith("Tuong"))
+            {
+
+                SetStatus set = hitTransform.gameObject.GetComponent<SetStatus>();
+                bool isSet = set.IsSetted();
+                if (Input.GetMouseButtonDown(0))
+                {
+                    if (holdContainer.childCount == 0)
+                    {
+                        if (isSet) return;
+                        ShowMessage(3f, "It's missing something");
+                        return;
+
+                    }
+                    if(holdContainer.GetChild(0).name != "BuffaloStatus" &&
+                    holdContainer.GetChild(0).name != "WolfStatus" && holdContainer.GetChild(0).name != "LionStatus" &&
+                    holdContainer.GetChild(0).name != "RihnoStatus")
+                    {
+                        if (isSet) return;
+                        ShowMessage(3f, "It's missing something");
+                    }
+                       
+                    else ShowMessage(1f, "");
+                }
+                return;
+
+            }
+            if (hitTransform.name.StartsWith("CLock_ClockDark_0"))
+            {
+
+                SetHourHand hourSet = hitTransform.gameObject.GetComponent<SetHourHand>();
+                SetMinuteHand minuteSet = hitTransform.GetComponent<SetMinuteHand>();
+                if (Input.GetMouseButtonDown(0))
+                {
+                    if (holdContainer.childCount == 0)
+                    {
+                        if (hourSet.isSetting && minuteSet.isSetting) return;
+                        
+                            ShowMessage(3f, "It's missing something");
+                        return;
+                        
+                    }
+                    if ( holdContainer.GetChild(0).name != "ClockHandOne" && holdContainer.GetChild(0).name != "ClockHandtwo")
+                    {
+                        if (hourSet.isSetting && minuteSet.isSetting) return;
+                        ShowMessage(3f, "It's missing something");
+                    }
+                        
+                    else ShowMessage(1f, "");
+                }
+                return;
+
+            }
+            if (hitTransform.name.StartsWith("MotorBlockForm"))
+            {
+
+                MotorBatterySetUp batterySet = hitTransform.gameObject.GetComponent<MotorBatterySetUp>();
+                MotorBlockSetUp blockSet = hitTransform.GetComponent<MotorBlockSetUp>();
+                if (Input.GetMouseButtonDown(0))
+                {
+                    if (holdContainer.childCount == 0)
+                    {
+                        if (batterySet.isSetted && blockSet.isSetted) return;
+                        
+                            ShowMessage(3f, "It's missing something");
+                        return;
+                        
+                    }
+                    if ( holdContainer.GetChild(0).name != "MotorBattery" && holdContainer.GetChild(0).name != "MotorBlock")
+                    {
+                        if (batterySet.isSetted && blockSet.isSetted) return;
+                        ShowMessage(3f, "It's missing something");
+                    }
+                        
+                    else ShowMessage(1f, "");
+                }
+                return;
+
+            }
+            if (hitTransform.name == "ButtonGarage")
             {
                 
                     
@@ -726,12 +864,14 @@ public class PlayerObjectNameDisplay : MonoBehaviour
             return;
         }
         pc.isOnObject = false;
-        
+        pc.isNotCorrect = false;
         canvasButtonLMB.gameObject.SetActive(false);
         
         
         canvasButtonERotate.gameObject.SetActive(false);
         canvasButtonQRotate.gameObject.SetActive(false);
+       
+        canvasButtonLMBRed.gameObject.SetActive(false);
     }
  
     public void SetClearText()

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Rendering;
 
 public class TranquilizerGun : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class TranquilizerGun : MonoBehaviour
     public Transform fpsCam;
     [SerializeField] private Transform gunBody;
     [SerializeField] private Transform player;
+    [SerializeField] private PickUpSystem pcs;
     [SerializeField] private PlayerObjectNameDisplay pond;
     private Collider gunBodyCollider;
 
@@ -19,6 +21,10 @@ public class TranquilizerGun : MonoBehaviour
     {
         pond = player.gameObject.GetComponent<PlayerObjectNameDisplay>();
         gunBodyCollider = gunBody.GetComponent<Collider>();
+    }
+    private void Start()
+    {
+        pcs = player.GetComponent<PickUpSystem>();
     }
 
     private void Update()
@@ -87,6 +93,7 @@ public class TranquilizerGun : MonoBehaviour
         }
         StartCoroutine(ReenableCollisionAfterDelay(rb, meshCol, gunBodyCollider, 0.5f));
         dartTransform = null;
+        pcs.MinusCountGun();
     }
 
     // 👇 Coroutine để bật lại va chạm sau delay

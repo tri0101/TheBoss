@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour
     public float jumpForce = 5f;
     public bool isGrounded = false;
     public bool isOnStair = false;
+    public bool isOnHighStair = false;
+    public float downForceVolume;
     [SerializeField] private bool isMoving;
     [Header("Mouse Look")]
     public float mouseSensitivity = 4f;
@@ -40,8 +42,9 @@ public class PlayerController : MonoBehaviour
     private const float footstepInterval = 0.5f; // 1 giây
     private Texture2D circleTex;
 
-
+    private bool hasDied = false;
     public bool isOnObject = false;
+    public bool isNotCorrect = false;
     private PlayerObjectNameDisplay pond;
     private FieldOfView fov;
     //AudioManager audioManager;
@@ -49,6 +52,10 @@ public class PlayerController : MonoBehaviour
     //{
     //    audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
     //}
+    public bool GetHasDied()
+    {
+        return this.hasDied;
+    }
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -178,13 +185,27 @@ public class PlayerController : MonoBehaviour
             Vector3 slopeMoveDir = GetSlopeMoveDirection();
             float dirDot = Vector3.Dot(slopeMoveDir.normalized, Vector3.down);
 
-            if (dirDot > 0f) // đang đi xuống
-                moveSpeed = 12.75f;
-            else             // đang đi lên
-                moveSpeed = 20f;
+            if (dirDot > 0f)
+            {
+                
+               moveSpeed = 12.75f;
+                
+                
+            }
+                
+            else
+            {
+                
+               moveSpeed = 20f;
+                
+            }
+                
 
             rb.AddForce(slopeMoveDir * moveSpeed * 2.5f, ForceMode.Force);
-            rb.AddForce(Vector3.down * 80f, ForceMode.Force);
+            downForceVolume = 80f;
+             rb.AddForce(Vector3.down * downForceVolume, ForceMode.Force);
+           
+                
         }
         else
         {
@@ -212,16 +233,26 @@ public class PlayerController : MonoBehaviour
             if (slopeHit.collider.CompareTag("Stair"))
             {
                 isOnStair = true;
+                if(slopeHit.collider.name == "Stairs Main HIgh")
+                {
+                    isOnHighStair = true;
+                }
+                else
+                {
+                    isOnHighStair = false;
+                }
             }
             else
             {
                 isOnStair = false;
+                isOnHighStair = false;
             }
 
             Debug.DrawLine(origin, slopeHit.point, Color.green);
         }
         else
         {
+            isOnHighStair = false;
             isOnStair = false;
             Debug.DrawLine(origin, origin + direction * rayLength, Color.red);
         }
@@ -263,6 +294,14 @@ public class PlayerController : MonoBehaviour
         {
             // Vẽ hình tròn trắng
             GUI.DrawTexture(new Rect(posX, posY, size, size), circleTex);
+        }
+        else if(isNotCorrect){
+            GUIStyle style = new GUIStyle();
+            style.fontSize = 24;
+            style.normal.textColor = Color.red;
+            style.alignment = TextAnchor.MiddleCenter;
+
+            GUI.Label(new Rect(posX, posY, size, size), "X", style);
         }
         else
         {
@@ -307,34 +346,63 @@ public class PlayerController : MonoBehaviour
     }
 
 
+
+    //void OnApplicationFocus(bool hasFocus)
+    //{
+    //    if (hasFocus)
+    //    {
+    //        Cursor.lockState = CursorLockMode.Locked;
+    //        Cursor.visible = false;
+    //    }
+    //    else
+    //    {
+    //        Cursor.lockState = CursorLockMode.None;
+    //        Cursor.visible = true;
+    //    }
+    //}
     public void SetDie()
     {
+        // Nếu đã xử lý chết rồi thì không làm lại
+        if (hasDied) return;
+        hasDied = true;
+
         PauseMenu pm = canvasMenu.GetComponent<PauseMenu>();
         pm.isDisabled = true;
+
         if (pond.GetReturnDoorKeyBlue())
         {
             pond.SetFalseTab();
         }
-        // Kiểm tra holdContainer có object nào không
+
+        // Tăng ngày chỉ 1 lần
         dayCount++;
+
+        // Nếu đang cầm vật phẩm thì thả ra
         if (holdContainer.childCount > 0)
         {
-           
             PickUpSystem pickUpSystem = GetComponent<PickUpSystem>();
             if (pickUpSystem != null)
             {
                 pickUpSystem.DropWhenDie();
             }
         }
+
+        // Tắt collider của player
         Collider col = transform.GetComponent<Collider>();
         col.enabled = false;
+
+        // Bật lại collider của con
         DisableChildColliders disableChildColliders = transform.GetComponent<DisableChildColliders>();
         disableChildColliders.EnableAllChildColliders();
-        
+
+        // Phát animation chết
         anim.SetTrigger("isFall");
+
+        // Gọi enemy phục hồi lại
         EnemyPatrolNav epn = enemy.GetComponent<EnemyPatrolNav>();
         epn.ForceRecoverNow();
-        // Gọi coroutine để xử lý sau 5 giây
+
+        // Gọi coroutine xử lý sau 5s
         StartCoroutine(HandleAfterDeath());
     }
     public void CallFalLSound()
@@ -367,7 +435,7 @@ public class PlayerController : MonoBehaviour
         }
 
             StartingPlayer startingPlayer = GetComponent<StartingPlayer>();
-        if (dayCount == 6)
+        if (dayCount >= 6)
         {
 
             startingPlayer.GameOver();
@@ -387,6 +455,7 @@ public class PlayerController : MonoBehaviour
         //transform.position = new Vector3(-14.2f, -6.14f, 7.11f);
         transform.position = new Vector3(-14.214f, -6.241f, 7.314f);
         transform.rotation = Quaternion.Euler(0f, 90f, 0f);
+        hasDied = false;
 
         // Gọi StartingPlayer.ReturnPlay()
         
