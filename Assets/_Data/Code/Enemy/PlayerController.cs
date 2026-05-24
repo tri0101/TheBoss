@@ -43,10 +43,14 @@ public class PlayerController : MonoBehaviour
     private Texture2D circleTex;
 
     private bool hasDied = false;
+    public bool HasDied => hasDied;
     public bool isOnObject = false;
     public bool isNotCorrect = false;
     private PlayerObjectNameDisplay pond;
     private FieldOfView fov;
+
+
+    [SerializeField] OpenLaptop openLaptop;
     //AudioManager audioManager;
     //private void Awake()
     //{
@@ -316,6 +320,10 @@ public class PlayerController : MonoBehaviour
     }
     public IEnumerator RotateToEnemy(Transform enemy, float duration)
     {
+        if (openLaptop.IsLaptopOpen)
+        {
+            openLaptop.CloseLaptop();
+        }
         // Đổi camera
         cameraMainPlayer.gameObject.SetActive(false);
         cameraHeadPlayer.gameObject.SetActive(true);

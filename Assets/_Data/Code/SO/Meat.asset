@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 551106f201e317a4dab1f57442a18157, type: 3}
   m_Name: Meat
   m_EditorClassIdentifier: 
-  requiredKeyName: Tranquilizer dart
+  requiredKeyName: Pill
   scriptParentName: PoisonMeatTest

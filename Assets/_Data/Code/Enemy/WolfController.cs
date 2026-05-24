@@ -75,7 +75,7 @@ public class WolfController : MonoBehaviour
         // ✅ Ưu tiên đuổi Player trước, chỉ ăn thịt khi player đã ra khỏi vùng NavMesh
         if (playerInNav && !isEatingAnim)
         {
-            Debug.Log("player muc tieu");
+           
             SetState(WolfState.Chase);
             HandleChase();
         }

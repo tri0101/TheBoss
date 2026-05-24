@@ -19,6 +19,8 @@ public class PlayerObjectNameDisplay : MonoBehaviour
     [SerializeField] private Transform canvasButtonSpray;
     [SerializeField] private Transform canvasButtonERotate;
     [SerializeField] private Transform canvasButtonQRotate;
+    [SerializeField] private Transform canvasButtonQCloseLaptop;
+    public Transform CanvasButtonQCloseLaptop { get => canvasButtonQCloseLaptop; set => canvasButtonQCloseLaptop = value; }
     [SerializeField] private Transform canvasButtonTab;
     [SerializeField] private Transform holdContainer;
     [SerializeField] private TextMeshProUGUI messageText;
@@ -57,6 +59,7 @@ public class PlayerObjectNameDisplay : MonoBehaviour
     }
     void Update()
     {
+        
         CheckHoldBottle();
         ShowObjectName();
         CheckInteractObject();
@@ -177,6 +180,10 @@ public class PlayerObjectNameDisplay : MonoBehaviour
         {
             ShowMessage(3f, "There is something in the bottle");
         }
+    }
+    private void CheckLaptopOpen()
+    {
+         
     }
     private void CheckChildHoldContainer()
     {
@@ -609,37 +616,49 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                 return;
                 
             }
-            if (hit.transform.name == "Laptop")
+            if (hit.transform.name == "Laptop" ||
+                hit.transform.name == "LapTopWithBattery")
             {
-
-                if (holdContainer.childCount > 0)
+                OpenLaptop ol = hit.transform.GetComponent<OpenLaptop>();
+                if(ol.IsSetBattery)
                 {
-                    if (holdContainer.GetChild(0).name != "LapBaterry")
+                    pc.isOnObject = true;
+                    
+                    canvasButtonE.gameObject.SetActive(true);
+                    return;
+                }
+                else
+                {
+                    if (holdContainer.childCount > 0)
+                    {
+                        if (holdContainer.GetChild(0).name != "LapBaterry")
+                        {
+                            if (Input.GetMouseButtonDown(0))
+                            {
+                                ShowMessage(3f, "The laptop is missing a battery");
+                                return;
+                            }
+
+                        }
+                        else
+                        {
+                            if (Input.GetMouseButtonDown(0))
+                            {
+                                ShowMessage(1f, "");
+                                return;
+                            }
+                        }
+                    }
+                    else
                     {
                         if (Input.GetMouseButtonDown(0))
                         {
                             ShowMessage(3f, "The laptop is missing a battery");
                             return;
                         }
-
-                    }
-                    else
-                    {
-                        if (Input.GetMouseButtonDown(0))
-                        {
-                            ShowMessage(1f,"");
-                            return;
-                        }
                     }
                 }
-                else
-                {
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        ShowMessage(3f, "The laptop is missing a battery");
-                        return;
-                    }
-                }
+                
             }
             if (hit.transform.name == "glassCabinet")
             {
@@ -870,7 +889,7 @@ public class PlayerObjectNameDisplay : MonoBehaviour
         
         canvasButtonERotate.gameObject.SetActive(false);
         canvasButtonQRotate.gameObject.SetActive(false);
-       
+        
         canvasButtonLMBRed.gameObject.SetActive(false);
     }
  

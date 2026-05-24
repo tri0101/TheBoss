@@ -22,7 +22,8 @@ public class PauseMenu : MonoBehaviour
     [Header("General")]
     public bool isDisabled = false;
     private bool isPaused = false;
-
+    [Header("Other script")]
+    [SerializeField] private OpenLaptop openLaptop;
     // Cấu hình giới hạn
     private const float stepSensitivity = 0.1f;
     private const float maxSensitivity = 1.5f;
@@ -136,10 +137,10 @@ public class PauseMenu : MonoBehaviour
 
         Time.timeScale = 1f;
         isPaused = false;
-
+        if (openLaptop.IsLaptopOpen) return;
         if (playerController != null)
             playerController.enabled = true;
-
+       
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
