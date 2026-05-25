@@ -21,6 +21,8 @@ public class PlayerObjectNameDisplay : MonoBehaviour
     [SerializeField] private Transform canvasButtonQRotate;
     [SerializeField] private Transform canvasButtonQCloseLaptop;
     public Transform CanvasButtonQCloseLaptop { get => canvasButtonQCloseLaptop; set => canvasButtonQCloseLaptop = value; }
+    [SerializeField] private Transform canvasButtonQCloseInvoice;
+     public Transform CanvasButtonQCloseInvoice { get => canvasButtonQCloseInvoice; set => canvasButtonQCloseInvoice = value; }
     [SerializeField] private Transform canvasButtonTab;
     [SerializeField] private Transform holdContainer;
     [SerializeField] private TextMeshProUGUI messageText;
@@ -465,7 +467,29 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                    
                 return;
             }
-            if(hitTransform.name == "KeypadVisuals")
+            if (hit.transform.name == "CookingBook")
+            {
+                nameText.text = "\"Baking for Beginners\", \"The Art of Grilling\", \"Sweet Desserts\"...";
+                pc.isOnObject = true;
+                canvasButtonE.gameObject.SetActive(false);
+                return;
+            }
+            else if (hit.transform.name == "DetectiveBook")
+            {
+                nameText.text = "\"The Last Detective\", \"Murder on Bell Street\", \"Whispers Behind the Door\" ....";
+                pc.isOnObject = true;
+                canvasButtonE.gameObject.SetActive(false);
+                return;
+            }
+            else if (hit.transform.name == "ScienceBook")
+            {
+                nameText.text = "\"Introduction to Physics\", \"The Laws of Motion\",\"Energy and Matter\"...";
+                pc.isOnObject = true;
+                canvasButtonE.gameObject.SetActive(false);
+                return;
+            }
+            
+            if (hitTransform.name == "KeypadVisuals")
             {
                 
                     
@@ -616,6 +640,13 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                 return;
                 
             }
+            if(hit.transform.name == "InvoicePaper")
+            {
+                pc.isOnObject = true;
+                nameText.text = "Invoice Paper";
+                canvasButtonE.gameObject.SetActive(true);
+                return;
+            }
             if (hit.transform.name == "Laptop" ||
                 hit.transform.name == "LapTopWithBattery")
             {
@@ -660,6 +691,7 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                 }
                 
             }
+            
             if (hit.transform.name == "glassCabinet")
             {
 
