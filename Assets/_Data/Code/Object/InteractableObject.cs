@@ -101,10 +101,27 @@ public class InteractableObject : MonoBehaviour
                         method.Invoke(scriptHolder, null);
 
                     }
-                    //else
-                    //{
-                    //    Debug.LogError("Script không có hàm ");
-                    //}
+                    return;
+                }
+                if (keyRequirement.requiredKeyName == "Soups and Stews" || 
+                    keyRequirement.requiredKeyName == "The Fallen Kingdom" || 
+                    keyRequirement.requiredKeyName == "Shadows of the Alley" || 
+                    keyRequirement.requiredKeyName == "Advanced Physics Concepts")
+                {
+                    if (scriptHolder == null)
+                    {
+                        Debug.LogWarning("Không có script để gọi ");
+                        return;
+                    }
+
+                    if (!Input.GetMouseButtonDown(0)) return;
+                    var method = scriptHolder.GetType().GetMethod("Run");
+                    if (method != null)
+                    {
+                        Debug.Log("Đang gọi");
+                        method.Invoke(scriptHolder, null);
+
+                    }
                     return;
                 }
                 if (child.name == keyRequirement.requiredKeyName)
@@ -191,20 +208,13 @@ public class InteractableObject : MonoBehaviour
             fakeKey.transform.localRotation = Quaternion.identity;
             fakeKey.gameObject.SetActive(false);
 
-            // 🔹 Bước 2: Gỡ khỏi container/camera
+  
             keyObject.SetParent(null);
-            //Debug.Log("🔄 Rotation sau khi SetParent(null): " + keyObject.eulerAngles);
             SetLayerRecursively(keyObject, "Default");
-            //// 🔹 Bước 3: Gán lại rotation thế giới từ localEuler vừa lưu
             keyObject.localRotation = Quaternion.Euler(config.properties.localRotationEuler);
 
-
-
-            // 🔹 Bước 5: Tiến về vị trí ổ khóa
-            // 🔹 Trục âm X của ổ khóa chính là hướng mà chìa phải nhìn vào
-
             Vector3 forwardDir = new Vector3(0, 0, 0);
-            Vector3 upDir = new Vector3(0, 0, 0);// hướng "chọc vào"
+            Vector3 upDir = new Vector3(0, 0, 0);
             Vector3 afterPushPos = new Vector3(0, 0, 0);
             Vector3 targetPos = keyPosition.position;
             if (transform.parent != null && transform.parent.parent != null)
@@ -225,18 +235,13 @@ public class InteractableObject : MonoBehaviour
                 }
                 Debug.Log("Local Rotation Y của cha của cha: " + rotationY);
             }
-              // giữ cùng hướng up với ổ khóa
             if (keyPosition != null)
             {
                 Vector3 startToKey = keyObject.position;
-              
 
-              
-
-                // Vì model chìa dài theo X local, ta xoay bù 90° để X của chìa = forwardDir
                 Quaternion targetRot = Quaternion.LookRotation(forwardDir, upDir) * Quaternion.Euler(0, 0, 90);
 
-                // Giữ rotation cố định ngay từ đầu
+             
                 keyObject.rotation = targetRot;
 
                 float moveToKeyDuration = 0.25f;
@@ -247,24 +252,17 @@ public class InteractableObject : MonoBehaviour
                     elapsedMove += Time.deltaTime;
                     float t = Mathf.Clamp01(elapsedMove / moveToKeyDuration);
 
-                    // Move thôi, không xoay nữa
+                    
                     keyObject.position = Vector3.Lerp(startToKey, targetPos, t);
 
                     yield return null;
                 }
 
                 keyObject.position = targetPos;
-                keyObject.rotation = targetRot; // đảm bảo cuối vẫn đúng góc
+                keyObject.rotation = targetRot;
 
                 yield return new WaitForSeconds(0.25f);
-            
-
-
-
-
-
-            // 🔹 Bước 6: Di chuyển nhẹ theo chiều âm trục X local của keyPosition
-            //Vector3 afterPushPos = targetPos - keyPosition.right * 0.1f;
+   
                 float pushDuration = 0.25f;
                 float elapsedPush = 0f;
 
@@ -290,7 +288,6 @@ public class InteractableObject : MonoBehaviour
             Quaternion startKeyRot = keyObject.rotation;
             Quaternion targetKeyRot = Quaternion.LookRotation(forwardDir, upDir) * Quaternion.Euler(0, 0, 0);
 
-            // Rotation của doorLock local X từ 0 → -90
             Quaternion startDoorRot = doorLock.localRotation;
             Quaternion targetDoorRot =  Quaternion.Euler(-90, 180, 90);
 
@@ -301,22 +298,18 @@ public class InteractableObject : MonoBehaviour
             {
                 elapsedRotate += Time.deltaTime;
                 float t = Mathf.Clamp01(elapsedRotate / rotateDuration);
-
-                // Xoay chìa
                 keyObject.rotation = Quaternion.Slerp(startKeyRot, targetKeyRot, t);
-
-                // Xoay doorLock (localRotation)
                 doorLock.localRotation = Quaternion.Slerp(startDoorRot, targetDoorRot, t);
 
                 yield return null;
             }
 
-            // đảm bảo cuối cùng về đúng vị trí
+    
             keyObject.rotation = targetKeyRot;
             doorLock.localRotation = targetDoorRot;
             Destroy(keyObject.gameObject);
             Destroy(fakeKey);
-            //keyObject.SetParent(null);
+ 
             OpenDoor();
 
             this.enabled = false;

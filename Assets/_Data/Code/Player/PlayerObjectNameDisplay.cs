@@ -59,6 +59,22 @@ public class PlayerObjectNameDisplay : MonoBehaviour
         isMoving = false;
         canvasCar.gameObject.SetActive(false);
     }
+    //private void ResetLookUI()
+    //{
+    //    nameText.text = "";
+
+    //    canvasButtonE.gameObject.SetActive(false);
+    //    canvasButtonERotate.gameObject.SetActive(false);
+    //    canvasButtonQRotate.gameObject.SetActive(false);
+    //    canvasButtonLMBRed.gameObject.SetActive(false);
+    //    // Nếu 2 cái này chỉ hiện khi UI đang mở thì bạn có thể tắt ở đây
+    //    if (canvasButtonQCloseLaptop != null) canvasButtonQCloseLaptop.gameObject.SetActive(false);
+    //    if (canvasButtonQCloseInvoice != null) canvasButtonQCloseInvoice.gameObject.SetActive(false);
+    //    pc.isNotCorrect = false;
+    //    // Trạng thái chung
+    //    pc.isOnObject = false;
+    //}
+
     void Update()
     {
         
@@ -249,7 +265,9 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                             isRayTrue = true;
                             canvasButtonLMB.gameObject.SetActive(true);
                             pc.isOnObject = true;
-
+                            pc.isNotCorrect = false;
+                            canvasButtonLMBRed.gameObject.SetActive(false);
+                            nameText.text = " ";
 
                             return;
                         }
@@ -262,8 +280,15 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                                 SetStatus setStatus = hit.transform.GetComponent<SetStatus>();
                                 if (setStatus.IsSetted()) return;
                             }
+                            if (hit.collider.transform.name == "HolderBook")
+                            {
+                                SetBook setBook = hit.transform.GetComponent<SetBook>();
+                                if (setBook.IsSetted()) return;
+                            }
+                            pc.isOnObject = false;
                             pc.isNotCorrect = true;
                             canvasButtonLMBRed.gameObject.SetActive(true);
+                            nameText.text = " ";
                             return;
                         }
 
@@ -292,9 +317,22 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                             {
                                 isRayTrue = true;
                                 canvasButtonLMB.gameObject.SetActive(true);
+                                canvasButtonLMBRed.gameObject.SetActive(false);
+                                pc.isNotCorrect = false;
                                 pc.isOnObject = true;
-
-
+                                return;
+                            }
+                            if (child.GetChild(0).name.Contains("Book") && 
+                                (requiredKeyName == "Soups and Stews" || 
+                                requiredKeyName == "Advanced Physics Concepts" || 
+                                requiredKeyName == "The Fallen Kingdom" ||
+                                requiredKeyName == "Shadows of the Alley"))
+                            {
+                                isRayTrue = true;
+                                canvasButtonLMB.gameObject.SetActive(true);
+                                canvasButtonLMBRed.gameObject.SetActive(false);
+                                pc.isNotCorrect = false;
+                                pc.isOnObject = true;
                                 return;
                             }
                             if (child.name == requiredKeyName)
@@ -302,8 +340,10 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                                 isRayTrue = true;
                                 canvasButtonLMB.gameObject.SetActive(true);
                                 pc.isOnObject = true;
-                                
-                                   
+                                pc.isNotCorrect = false;
+                                canvasButtonLMBRed.gameObject.SetActive(false);
+                                nameText.text = " ";
+
                                 return;
                             }
                             else if (hit.collider.transform.name == "CLock_ClockDark_0")
@@ -331,6 +371,11 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                                 {
                                     SetStatus setStatus = hit.transform.GetComponent<SetStatus>();
                                     if (setStatus.IsSetted()) return;
+                                }
+                                if (hit.collider.transform.name == "HolderBook")
+                                {
+                                    SetBook setBook = hit.transform.GetComponent<SetBook>();
+                                    if (setBook.IsSetted()) return;
                                 }
                                 
                                 pc.isNotCorrect = true;
@@ -366,6 +411,7 @@ public class PlayerObjectNameDisplay : MonoBehaviour
 
     private void ShowObjectName()
     {
+        
         Ray ray = new Ray(fpsCam.transform.position, fpsCam.transform.forward);
         if (Physics.Raycast(ray, out RaycastHit hit, checkRange))
         {
@@ -471,6 +517,8 @@ public class PlayerObjectNameDisplay : MonoBehaviour
             {
                 nameText.text = "\"Baking for Beginners\", \"The Art of Grilling\", \"Sweet Desserts\"...";
                 pc.isOnObject = true;
+                canvasButtonLMBRed.gameObject.SetActive(false);
+                canvasButtonLMB.gameObject.SetActive(false);
                 canvasButtonE.gameObject.SetActive(false);
                 return;
             }
@@ -478,6 +526,8 @@ public class PlayerObjectNameDisplay : MonoBehaviour
             {
                 nameText.text = "\"The Last Detective\", \"Murder on Bell Street\", \"Whispers Behind the Door\" ....";
                 pc.isOnObject = true;
+                canvasButtonLMB.gameObject.SetActive(false);
+                canvasButtonLMBRed.gameObject.SetActive(false);
                 canvasButtonE.gameObject.SetActive(false);
                 return;
             }
@@ -485,6 +535,18 @@ public class PlayerObjectNameDisplay : MonoBehaviour
             {
                 nameText.text = "\"Introduction to Physics\", \"The Laws of Motion\",\"Energy and Matter\"...";
                 pc.isOnObject = true;
+                canvasButtonLMBRed.gameObject.SetActive(false);
+                canvasButtonLMB.gameObject.SetActive(false);
+                canvasButtonE.gameObject.SetActive(false);
+                return;
+            }
+            
+            else if (hit.transform.name == "HistoryBook")
+            {
+                nameText.text = "\"War and Empires\", \"Ancient Civilizations\",\"History of the East\"...";
+                pc.isOnObject = true;
+                canvasButtonLMBRed.gameObject.SetActive(false);
+                canvasButtonLMB.gameObject.SetActive(false);
                 canvasButtonE.gameObject.SetActive(false);
                 return;
             }
@@ -558,6 +620,34 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                     if(holdContainer.GetChild(0).name != "BuffaloStatus" &&
                     holdContainer.GetChild(0).name != "WolfStatus" && holdContainer.GetChild(0).name != "LionStatus" &&
                     holdContainer.GetChild(0).name != "RihnoStatus")
+                    {
+                        if (isSet) return;
+                        ShowMessage(3f, "It's missing something");
+                    }
+                       
+                    else ShowMessage(1f, "");
+                }
+                return;
+
+            }
+            if (hitTransform.name == "HolderBook")
+            {
+
+                SetBook set = hitTransform.gameObject.GetComponent<SetBook>();
+                bool isSet = set.IsSetted();
+                if (Input.GetMouseButtonDown(0))
+                {
+                    if (holdContainer.childCount == 0)
+                    {
+                        if (isSet) return;
+                        ShowMessage(3f, "It's missing something");
+                        return;
+
+                    }
+                    if(holdContainer.GetChild(0).name != "Shadows of the Alley" &&
+                    holdContainer.GetChild(0).name != "The Fallen Kingdom" && 
+                    holdContainer.GetChild(0).name != "Advanced Physics Concepts" &&
+                    holdContainer.GetChild(0).name != "Soups and Stews")
                     {
                         if (isSet) return;
                         ShowMessage(3f, "It's missing something");
@@ -904,10 +994,10 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                 
             }
         }
-       
-            // Không tìm thấy thì clear
-            nameText.text = "";
-        
+
+        // Không tìm thấy thì clear
+        nameText.text = "";
+
         canvasButtonE.gameObject.SetActive(false);
         if (isRayTrue)
         {
@@ -917,11 +1007,11 @@ public class PlayerObjectNameDisplay : MonoBehaviour
         pc.isOnObject = false;
         pc.isNotCorrect = false;
         canvasButtonLMB.gameObject.SetActive(false);
-        
-        
+
+
         canvasButtonERotate.gameObject.SetActive(false);
         canvasButtonQRotate.gameObject.SetActive(false);
-        
+
         canvasButtonLMBRed.gameObject.SetActive(false);
     }
  
