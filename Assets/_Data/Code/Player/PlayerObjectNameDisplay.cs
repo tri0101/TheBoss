@@ -19,6 +19,7 @@ public class PlayerObjectNameDisplay : MonoBehaviour
     [SerializeField] private Transform canvasButtonSpray;
     [SerializeField] private Transform canvasButtonERotate;
     [SerializeField] private Transform canvasButtonQRotate;
+    [SerializeField] private Transform canvasRReset;
     [SerializeField] private Transform canvasButtonQCloseLaptop;
     public Transform CanvasButtonQCloseLaptop { get => canvasButtonQCloseLaptop; set => canvasButtonQCloseLaptop = value; }
     [SerializeField] private Transform canvasButtonQCloseInvoice;
@@ -288,6 +289,7 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                             pc.isOnObject = false;
                             pc.isNotCorrect = true;
                             canvasButtonLMBRed.gameObject.SetActive(true);
+                            canvasButtonLMB.gameObject.SetActive(false);
                             nameText.text = " ";
                             return;
                         }
@@ -338,10 +340,11 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                             if (child.name == requiredKeyName)
                             {
                                 isRayTrue = true;
-                                canvasButtonLMB.gameObject.SetActive(true);
+                                
                                 pc.isOnObject = true;
                                 pc.isNotCorrect = false;
                                 canvasButtonLMBRed.gameObject.SetActive(false);
+                                canvasButtonLMB.gameObject.SetActive(true);
                                 nameText.text = " ";
 
                                 return;
@@ -352,6 +355,7 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                                 {
                                     pc.isNotCorrect = true;
                                     canvasButtonLMBRed.gameObject.SetActive(true);
+                                    canvasButtonLMB.gameObject.SetActive(false);
                                     return;
                                 }
                             }
@@ -361,6 +365,7 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                                 {
                                     pc.isNotCorrect = true;
                                     canvasButtonLMBRed.gameObject.SetActive(true);
+                                    canvasButtonLMB.gameObject.SetActive(false);
                                     return;
                                 }
                             }
@@ -380,6 +385,7 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                                 
                                 pc.isNotCorrect = true;
                                 canvasButtonLMBRed.gameObject.SetActive(true);
+                                canvasButtonLMB.gameObject.SetActive(false);
                                 return;
                             }
 
@@ -439,6 +445,17 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                     return;
                 }
             }
+            if (hitTransform.name == "DialSafe")
+            {
+              
+                
+                pc.isOnObject = true;
+                canvasButtonERotate.gameObject.SetActive(true);
+                canvasButtonQRotate.gameObject.SetActive(true);
+                canvasRReset.gameObject.SetActive(true);
+                return;
+                
+            }
             if (hitTransform.name.StartsWith("_"))
             {
                 if (hit.transform.name == "_Door.Block")
@@ -449,6 +466,7 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                     {
                         pc.isNotCorrect = true;
                         canvasButtonLMBRed.gameObject.SetActive(true);
+                        canvasButtonLMB.gameObject.SetActive(false);
                         if (Input.GetMouseButtonDown(0))
                         {
                             ShowMessage(3f, "It’s locked from the other side");
@@ -508,6 +526,7 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                 {
                     pc.isOnObject = true;
                     canvasButtonLMB.gameObject.SetActive(true);
+                    canvasButtonLMBRed.gameObject.SetActive(false);
                     
                 }
                    
@@ -558,7 +577,7 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                     if (Input.GetMouseButtonDown(0))
                     {
                         if(holdContainer.childCount == 0 || holdContainer.GetChild(0).name != "Cue Stick")
-                        ShowMessage(3f, "You can't reach it");
+                        ShowMessage(3f, "I can't reach it");
                         else ShowMessage(1f, "");
                     }
                 return;
@@ -571,7 +590,7 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                     if (Input.GetMouseButtonDown(0))
                     {
                         if(holdContainer.childCount == 0 || holdContainer.GetChild(0).name != "Cue Stick")
-                        ShowMessage(3f, "You can't reach it");
+                        ShowMessage(3f, "I can't reach it");
                         else ShowMessage(1f, "");
                     }
                 return;
@@ -584,7 +603,7 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                     if (Input.GetMouseButtonDown(0))
                     {
                         if(holdContainer.childCount == 0 || holdContainer.GetChild(0).name != "Axe")
-                        ShowMessage(3f, "You need something to break it");
+                        ShowMessage(3f, "I need something to break it");
                         else ShowMessage(1f, "");
                     }
                 return;
@@ -597,7 +616,7 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                     if (Input.GetMouseButtonDown(0))
                     {
                         if(holdContainer.childCount == 0 || holdContainer.GetChild(0).name != "Screwdriver")
-                        ShowMessage(3f, "You need something to remove this nail");
+                        ShowMessage(3f, "I need something to remove this nail");
                         else ShowMessage(1f, "");
                     }
                 return;
@@ -648,6 +667,31 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                     holdContainer.GetChild(0).name != "The Fallen Kingdom" && 
                     holdContainer.GetChild(0).name != "Advanced Physics Concepts" &&
                     holdContainer.GetChild(0).name != "Soups and Stews")
+                    {
+                        if (isSet) return;
+                        ShowMessage(3f, "It's missing something");
+                    }
+                       
+                    else ShowMessage(1f, "");
+                }
+                return;
+
+            }
+            if (hitTransform.name == "PlaceCassette")
+            {
+
+                SetCassette set = hitTransform.gameObject.GetComponent<SetCassette>();
+                bool isSet = set.IsSetted();
+                if (Input.GetMouseButtonDown(0))
+                {
+                    if (holdContainer.childCount == 0)
+                    {
+                        if (isSet) return;
+                        ShowMessage(3f, "It's missing something");
+                        return;
+
+                    }
+                    if(holdContainer.GetChild(0).name != "Baby Lullaby Cassette")
                     {
                         if (isSet) return;
                         ShowMessage(3f, "It's missing something");
@@ -719,7 +763,7 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                     if (holdContainer.childCount == 0 || holdContainer.GetChild(0).name != "Cue Stick")
                     {
                         //if (messageText.text == " ") return;
-                        ShowMessage(3f, "You can't reach it");
+                        ShowMessage(3f, "I can't reach it");
                     }
                         
                     else
@@ -736,6 +780,37 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                 nameText.text = "Invoice Paper";
                 canvasButtonE.gameObject.SetActive(true);
                 return;
+            }
+            if(hit.transform.name == "NoteSafePaper")
+            {
+                pc.isOnObject = true;
+                nameText.text = "Note";
+                canvasButtonE.gameObject.SetActive(true);
+                return;
+            }
+            if(hit.transform.name == "ButtonOpenCassette")
+            {
+                DoorCassette doorCassette = hit.transform.GetComponent<DoorCassette>();
+                if ((doorCassette.IsOk))
+                {
+                    if (doorCassette.HasStartedMoving) return;
+                    pc.isOnObject = true;
+                    canvasButtonLMB.gameObject.SetActive(true);
+                    canvasButtonLMBRed.gameObject.SetActive(false);
+                    ShowMessage(1f,"");
+                    return;
+                }
+                else
+                {
+                    
+                    pc.isNotCorrect = true;
+                    canvasButtonLMBRed.gameObject.SetActive(true);
+                    canvasButtonLMB.gameObject.SetActive(false);
+                    if (Input.GetMouseButtonDown(0) && !doorCassette.IsOk)
+                        ShowMessage(3f, "It's missing something");
+                    return;
+                }
+
             }
             if (hit.transform.name == "Laptop" ||
                 hit.transform.name == "LapTopWithBattery")
@@ -791,7 +866,7 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                     {
                         if (Input.GetMouseButtonDown(0))
                         {
-                            ShowMessage(3f, "You need to break the glass cabinet");
+                            ShowMessage(3f, "I need to break the glass cabinet");
                             return;
                         }
 
@@ -809,7 +884,7 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                 {
                     if (Input.GetMouseButtonDown(0))
                     {
-                        ShowMessage(3f, "You need to break the glass cabinet");
+                        ShowMessage(3f, "I need to break the glass cabinet");
                         return;
                     }
                 }
@@ -885,7 +960,7 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                 {
                     if (Input.GetMouseButtonDown(0))
                     {
-                        ShowMessage(3f, "You haven’t completed all objectives yet");
+                        ShowMessage(3f, "I haven’t completed all objectives yet");
                         return;
                     }
                 }
@@ -896,7 +971,7 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                         {
                             if (Input.GetMouseButtonDown(0))
                             {
-                                ShowMessage(3f, "You must bring the car key to open the door");
+                                ShowMessage(3f, "I must bring the car key to open the door");
                                 return;
                             }
 
@@ -907,7 +982,7 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                             {
                                 if (Input.GetMouseButtonDown(0))
                                 {
-                                    ShowMessage(3f, "You need to close the car hood");
+                                    ShowMessage(3f, "I need to close the car hood");
                                     return;
                                 }
                             }
@@ -930,7 +1005,7 @@ public class PlayerObjectNameDisplay : MonoBehaviour
                     {
                         if (Input.GetMouseButtonDown(0))
                         {
-                            ShowMessage(3f, "You must bring the car key to open the door");
+                            ShowMessage(3f, "I must bring the car key to open the door");
                             return;
                         }
                     }
@@ -1011,6 +1086,7 @@ public class PlayerObjectNameDisplay : MonoBehaviour
 
         canvasButtonERotate.gameObject.SetActive(false);
         canvasButtonQRotate.gameObject.SetActive(false);
+        canvasRReset.gameObject.SetActive(false);
 
         canvasButtonLMBRed.gameObject.SetActive(false);
     }

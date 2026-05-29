@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public class OpenInvoice : MonoBehaviour
+public class OpenNoteSafe : MonoBehaviour
 {
     [SerializeField] private Transform canvas;
     [SerializeField] private GameObject player;
     PlayerController playerController;
-    private bool isInvoiceOpen = false;
-    public bool IsInvoiceOpen => isInvoiceOpen;
+    private bool isNoteOpen = false;
+    public bool IsNoteOpen => isNoteOpen;
 
     private void Start()
     {
@@ -15,17 +15,17 @@ public class OpenInvoice : MonoBehaviour
     }
     public void Run()
     {
-        
-            player.GetComponent<PlayerController>().enabled = false;
-            canvas.gameObject.SetActive(true);
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-            PlayerObjectNameDisplay pond = player.GetComponent<PlayerObjectNameDisplay>();
-            pond.CanvasButtonQCloseInvoice.gameObject.SetActive(true);
-            isInvoiceOpen = true;
+
+        player.GetComponent<PlayerController>().enabled = false;
+        canvas.gameObject.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        PlayerObjectNameDisplay pond = player.GetComponent<PlayerObjectNameDisplay>();
+        pond.CanvasButtonQCloseInvoice.gameObject.SetActive(true);
+        isNoteOpen = true;
 
     }
-    public void CloseInvoice()
+    public void CloseNoteSafe()
     {
         canvas.gameObject.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
@@ -33,14 +33,14 @@ public class OpenInvoice : MonoBehaviour
         player.GetComponent<PlayerController>().enabled = true;
         PlayerObjectNameDisplay pond = player.GetComponent<PlayerObjectNameDisplay>();
         pond.CanvasButtonQCloseInvoice.gameObject.SetActive(false);
-        isInvoiceOpen = false;
+        isNoteOpen = false;
     }
     void Update()
     {
 
-        if (isInvoiceOpen && Input.GetKeyDown(KeyCode.Q))
+        if (isNoteOpen && Input.GetKeyDown(KeyCode.Q))
         {
-            CloseInvoice();
+            CloseNoteSafe();
         }
     }
 

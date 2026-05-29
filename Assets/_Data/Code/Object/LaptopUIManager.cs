@@ -12,7 +12,7 @@ public class LaptopUIManager : MonoBehaviour
     [SerializeField] private TMP_InputField input;
     [SerializeField] private Button buttonLogin;
 
-    private const string PASSWORD = "Alababi20";
+    private const string PASSWORD = "Winston10";
 
     private void Start()
     {

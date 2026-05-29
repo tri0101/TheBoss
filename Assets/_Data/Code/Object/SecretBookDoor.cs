@@ -91,12 +91,7 @@ public class SecretBookDoor : MonoBehaviour
 
         foreach (Transform child in parent)
         {
-            //if (child.name.ToLower().Contains("status"))
-            //{
-            //    child.tag = "Untagged";
-            //    child.gameObject.layer = LayerMask.NameToLayer("Default");
-            //    SetTagAndLayerRecursively(child, "Untagged", "Default");
-            //}
+
             child.tag = "Untagged";
             child.gameObject.layer = LayerMask.NameToLayer("Default");
             SetTagAndLayerRecursively(child, "Untagged", "Default");

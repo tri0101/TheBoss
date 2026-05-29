@@ -37,15 +37,7 @@ public class RotationOnClick : MonoBehaviour
     }
     void Start()
     {
-        //GameObject playerObj = GameObject.Find("Player");
-        //if (playerObj != null)
-        //{
-        //    player = playerObj.transform;
-        //}
-        //else
-        //{
-        //    Debug.LogWarning("Không tìm thấy GameObject tên là 'Player' trong Hierarchy.");
-        //}
+
         // Khởi tạo rotation hiện tại từ fromRotationEuler
         currentX = rotationData.fromRotationEuler.x;
         currentY = rotationData.fromRotationEuler.y;

@@ -36,6 +36,11 @@ public class AudioManager : MonoBehaviour
     public AudioClip punchSound;
     public AudioClip dogSound;
     public AudioClip stickSound;
+    public AudioClip buttonPress;
+    public AudioClip babyCry;
+    public AudioClip babyLullaby;
+    public AudioClip dumpster;
+    public AudioClip dialSafe;
 
     public AudioClip tikSound;
     public AudioClip tokSound;
@@ -67,6 +72,7 @@ public class AudioManager : MonoBehaviour
     /// <summary>
     /// Phát SFX luôn nghe được (2D).
     /// </summary>
+ 
     public void PlaySFX(AudioClip clip, float volume = 1f)
     {
         if (clip == null) return;
@@ -110,18 +116,18 @@ public class AudioManager : MonoBehaviour
     }
     private void Update()
     {
-        if (player != null)
-        {
-            if (isOutDoor)
-            {
-                PlayMusic(outdoorSound, 0.7f);
+        //if (player != null)
+        //{
+        //    if (isOutDoor)
+        //    {
+        //        PlayMusic(outdoorSound, 0.7f);
                 
-            }
-            else
-            {
-                StopMusic();
-            }
-        }
+        //    }
+        //    else
+        //    {
+        //        StopMusic();
+        //    }
+        //}
     }
     public void PlayMusic(AudioClip clip, float volume = 1f)
     {
@@ -186,6 +192,17 @@ public class AudioManager : MonoBehaviour
     public void PlaySFXAtPosition(AudioClip clip, Vector3 pos, float minDist = 2f, float maxDist = 15f, float volume = 1f)
     {
         if (clip == null) return;
+        if (clip == babyCry)
+        {
+            if (player == null) return;
+
+            float y = player.position.y;
+            float x = player.position.x;
+            float z = player.position.z;
+
+            if (y > 4f || y < 3f) return;
+            if (x > -13f || z < 9 ) return;
+        }
 
         GameObject temp = new GameObject("TempAudio");
         temp.transform.position = pos;
@@ -357,16 +374,20 @@ public class AudioManager : MonoBehaviour
             fadeOutCoroutine = null;
         }
 
-        // Nếu đang phát nhạc khác hoặc chưa phát
         if (!isMusicPlaying || musicSorce.clip != clip)
         {
+            currentMusicVolume = volume;
             musicSorce.clip = clip;
             musicSorce.volume = musicVolume * volume;
             musicSorce.loop = true;
             musicSorce.Play();
-
             isMusicPlaying = true;
-            currentMusicVolume = volume;
+
+            Debug.Log($"CallTensionMusic: PLAY -> isPlaying={musicSorce.isPlaying}, time={musicSorce.time}");
+        }
+        else
+        {
+            Debug.Log($"CallTensionMusic: already playing this clip. isPlaying={musicSorce.isPlaying}");
         }
     }
 
